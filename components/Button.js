@@ -1,5 +1,5 @@
 import styled, { css } from "styled-components";
-import {primary} from "@/lib/colors";
+import { primary } from "@/lib/colors";
 
 export const ButtonStyle = css`
   border: 0;
@@ -10,11 +10,18 @@ export const ButtonStyle = css`
   align-items: center;
   text-decoration: none;
   font-weight: 700;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   svg {
     height: 16px;
     margin-right: 5px;
   }
+
+  ${(props) =>
+    props.block &&
+    css`
+      display: block;
+      width: 100%;
+    `}
 
   ${(props) =>
     props.size === "l" &&
@@ -50,6 +57,23 @@ ${(props) =>
       color: #fff;
       border: 1px solid #fff;
     `}
+
+    ${(props) =>
+    props.black &&
+    !props.outline &&
+    css`
+      background-color: #000;
+      color: #fff;
+    `}
+  
+  ${(props) =>
+    props.black &&
+    props.outline &&
+    css`
+      background-color: transparent;
+      color: #000;
+      border: 1px solid #000;
+    `}
 `;
 
 const StyledButton = styled.button`
@@ -76,7 +100,8 @@ const StyledButton = styled.button`
     `}
 
   ${(props) =>
-    props.primary && !props.outline &&
+    props.primary &&
+    !props.outline &&
     css`
       background-color: ${primary};
       border: 1px solid ${primary};
@@ -84,12 +109,13 @@ const StyledButton = styled.button`
     `}
 
     ${(props) =>
-      props.primary && props.outline &&
-      css`
-        background-color: transparent;
-        border: 1px solid ${primary};
-        color: ${primary};
-      `}
+    props.primary &&
+    props.outline &&
+    css`
+      background-color: transparent;
+      border: 1px solid ${primary};
+      color: ${primary};
+    `}
 
     ${(props) =>
     props.white &&
@@ -107,6 +133,24 @@ const StyledButton = styled.button`
       color: #fff;
       border: 1px solid #fff;
     `}
+
+
+    ${(props) =>
+      props.black &&
+      !props.outline &&
+      css`
+        background-color: #000;
+        color: #fff;
+      `}
+    
+    ${(props) =>
+      props.black &&
+      props.outline &&
+      css`
+        background-color: transparent;
+        color: #000;
+        border: 1px solid #000;
+      `}
 `;
 
 export default function Button({ children, ...rest }) {
