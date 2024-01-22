@@ -2,6 +2,7 @@ import Button from "@/components/Button";
 import { CartContext } from "@/components/CartContext";
 import Center from "@/components/Center";
 import Header from "@/components/Header";
+import Table from "@/components/Table";
 import axios from "axios";
 import { useContext, useState, useEffect } from "react";
 import styled from "styled-components";
@@ -17,37 +18,102 @@ const Box = styled.div`
   border-radius: 10px;
   padding: 30px;
 `;
+
+const ProductInfoCell = styled.td`
+  padding: 10px 0;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+`;
+
+const ProductImageBox = styled.div`
+  width: 100px;
+  height: 100px;
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+
+  img {
+    max-width: 80px;
+    max-height: 80px;
+  }
+`;
+
+const QuantityLabel = styled.span`
+  padding: 0 3px;
+`;
+
 export default function CartPage() {
-  const { cartProducts } = useContext(CartContext);
+  const { cartProducts, addProduct, removeProduct } = useContext(CartContext);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
     if (cartProducts.length > 0) {
-        axios.post('/api/cart', {ids:cartProducts})
-        .then(response => {
-            setProducts(response.data);
-        })
+      axios.post("/api/cart", { ids: cartProducts }).then((response) => {
+        setProducts(response.data);
+      });
     }
-    
   }, [cartProducts]);
 
-  console.log(products.length);
-  console.log(cartProducts.length);
+  function incrementProduct(id) {
+    addProduct(id);
+  }
+
+  function decrementProduct(id) {
+    removeProduct(id);
+  }
   return (
     <>
       <Header />
       <Center>
         <ColumnsWrapper>
           <Box>
-            {!cartProducts?.length && (<div>Your cart is empty</div>)}
+            <h2>Cart</h2>
+            {!cartProducts?.length && <div>Your cart is empty</div>}
             {products?.length > 0 && (
-              <>
-                <h2>Cart</h2>
-                {products.map(product => (
-                  <div>{product.title}: {cartProducts.filter(id => id === 
-                    product._id).length}</div>
-                ))}
-              </>
+              <Table>
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {products.map((product) => (
+                    <tr>
+                      <ProductInfoCell>
+                        <ProductImageBox>
+                          <img src={product.images[0]} alt="" />
+                        </ProductImageBox>
+                        {product.title}:
+                      </ProductInfoCell>
+                      <td>
+                        <Button onClick={() => decrementProduct(product._id)}>
+                          -
+                        </Button>
+                        <QuantityLabel>
+                          {
+                            cartProducts.filter((id) => id === product._id)
+                              .length
+                          }
+                        </QuantityLabel>
+
+                        <Button onClick={() => incrementProduct(product._id)}>
+                          +
+                        </Button>
+                      </td>
+                      <td>
+                        $
+                        {cartProducts.filter((id) => id === product._id)
+                          .length * product.price}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
             )}
           </Box>
           {!!cartProducts?.length && (
