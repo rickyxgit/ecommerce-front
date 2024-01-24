@@ -10,8 +10,8 @@ export default async function handler(req, res) {
         return;
     }
 
-    const {name, email, city, postalCode, streetAddress, country, products} = req.body;
-    const productsIds = products.split(',');
+    const {name, email, city, postalCode, streetAddress, country, cartProducts,} = req.body;
+    const productsIds = cartProducts;
     await mongooseConnect();
     const uniqueIds = [...new Set(productsIds)];
     const productsInfos = await Product.find({_id:uniqueIds});
