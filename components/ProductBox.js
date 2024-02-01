@@ -53,7 +53,7 @@ export default function ProductBox({ _id, title, description, price, images }) {
   return (
     <ProductWrapper>
       <Box href={url}>
-        <img src={images[0]} alt="" />
+        <img src={images?.[0]} alt="" />
       </Box>
       <ProductInfoBox>
         <Title href={url}>{title}</Title>
